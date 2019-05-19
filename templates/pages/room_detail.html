@@ -1,0 +1,373 @@
+{% extends 'layout/main.html' %}
+{% load static %}
+
+{% block header %}
+
+{% endblock %}
+{% block section %}
+    <a href="{% url 'QuanLyTiecCuoi:rooms' %}">Danh Sách Phòng</a> <i class="fa fa-fw  fa-angle-right"></i>
+    {{ action }}
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h2 class="box-title">{{ action }} Phòng</h2>
+                        <br>
+                        <hr>
+                    </div>
+
+                    <div class="box-body">
+                        <form class="form-horizontal" method="POST" action="{{ url }}">
+                            {% csrf_token %}
+
+                            <div class="form-group">
+                                <label for="inputUser3" class="col-md-1 control-label">Name</label>
+                                <div class="col-md-11">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+
+                                        <input name="name" type="text" class="form-control"
+                                               placeholder="Name" required value="{{ room.name }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputUser3" class="col-md-1 control-label">
+                                    <a type="button" class="btn btn-box-tool" title="Thêm loại phòng"
+                                       href="#">
+                                        <i class="fa fa-plus text-success" style="font-size: 15px"></i>
+                                    </a>Loại </label>
+                                <div class="col-md-11">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-list"></i></span>
+
+                                        <select name="room_type" class="form-control type-select">
+                                            {% for type in room_type %}
+                                                <option value="{{ type.id }}">{{ type.name }}</option>
+                                            {% endfor %}
+                                        </select>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputUser3" class="col-md-1 control-label">Giá 1 giờ</label>
+                                <div class="col-md-11">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+
+                                        <input name="price" type="number" class="form-control rk-filter"
+                                               placeholder="mô tả" value="{{ room.price }}">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12">
+
+                                <button type="submit" style="float: right; margin-left: 10px;"
+                                        class="btn btn-primary">
+                                    {{ btn_content }}
+                                </button>
+                                {% if room %}
+                                    <button type="button" id="delete" style="float: right;"
+                                            class="btn btn-danger">
+                                        Delete
+                                    </button>
+                                {% endif %}
+                            </div>
+
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+{#            {% if room %}#}
+{##}
+{#                <div class=" col-lg-6">#}
+{#                    <div class="box box-primary">#}
+{#                        <div class="box-header">#}
+{#                            <h3 class="box-title">History in</h3>#}
+{#                            <div class="box-tools pull-right">#}
+{#                            </div>#}
+{##}
+{#                        </div>#}
+{##}
+{##}
+{#                        <div class="box-body">#}
+{#                            <table id="goods-in" class="table table-bordered table-striped">#}
+{#                                <thead>#}
+{#                                <tr>#}
+{#                                    <th style="width: 35%">Date</th>#}
+{#                                    <th style="width: 20%">Count</th>#}
+{#                                    <th style="width: 25%">Supplier</th>#}
+{#                                    <th style="width: 20%">More</th>#}
+{#                                    <th hidden="hidden"></th>#}
+{##}
+{#                                </tr>#}
+{#                                </thead>#}
+{#                                <tbody id="data-table">#}
+{#                                </tbody>#}
+{#                                <tfoot>#}
+{#                                <tr>#}
+{#                                    <th style="width: 30%">Date</th>#}
+{#                                    <th style="width: 15%">Count</th>#}
+{#                                    <th style="width: 30%">Supplier</th>#}
+{#                                    <th style="width: 25%">More</th>#}
+{#                                    <th hidden="hidden"></th>#}
+{##}
+{##}
+{#                                </tr>#}
+{#                                </tfoot>#}
+{#                            </table>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class=" col-lg-6">#}
+{#                    <div class="box box-primary">#}
+{#                        <div class="box-header">#}
+{#                            <h3 class="box-title">History out</h3>#}
+{#                            <div class="box-tools pull-right">#}
+{#                            </div>#}
+{##}
+{#                        </div>#}
+{##}
+{##}
+{#                        <div class="box-body">#}
+{#                            <table id="goods-out" class="table table-bordered table-striped">#}
+{#                                <thead>#}
+{#                                <tr>#}
+{#                                    <th style="width: 35%">Date</th>#}
+{#                                    <th style="width: 20%">Count</th>#}
+{#                                    <th style="width: 25%">Customer</th>#}
+{#                                    <th style="width: 20%">More</th>#}
+{#                                    <th hidden="hidden"></th>#}
+{##}
+{#                                </tr>#}
+{#                                </thead>#}
+{#                                <tbody id="data-table">#}
+{#                                </tbody>#}
+{#                                <tfoot>#}
+{#                                <tr>#}
+{#                                    <th style="width: 30%">Date</th>#}
+{#                                    <th style="width: 15%">Count</th>#}
+{#                                    <th style="width: 30%">Customer</th>#}
+{#                                    <th style="width: 25%">More</th>#}
+{#                                    <th hidden="hidden"></th>#}
+{##}
+{##}
+{#                                </tr>#}
+{#                                </tfoot>#}
+{#                            </table>#}
+{#                        </div>#}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{##}
+{##}
+{#            {% endif %}#}
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static "bower_components/datatables.net/js/jquery.dataTables.min.js" %}"></script>
+    <script src="{% static "bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js" %}"></script>
+    <script>
+        {% if room %}
+            var type = {{ room.room_type_id }}
+            var method = "PUT"
+            var action = "Update"
+            $(".type-select").val(type)
+        {% else %}
+            var method = "POST"
+            var action = "Create"
+        {% endif %}
+
+        $(function () {
+            {% if room %}
+                $("#delete").click(function () {
+                    if (confirm("Do you want to delete this room?")) {
+                        let form = $("form");
+                        let url = form.attr('action');
+                        $.ajax({
+                            type: "DELETE",
+                            url: url,
+                            headers: {
+                                "X-CSRFToken": "{{csrf_token}}"
+                            },
+                            success: function (data) {
+                                window.location.href = "{% url 'QuanLyTiecCuoi:rooms' %}";
+                            }
+                        });
+                    }
+
+                })
+            {% endif %}
+            $("form").submit(function (e) {
+
+
+                var form = $(this);
+                var url = form.attr('action');
+
+                $.ajax({
+                    type: method,
+                    url: url,
+                    data: form.serialize(), // serializes the form's elements.
+                    headers: {
+                        "X-CSRFToken": "{{csrf_token}}"
+                    },
+                    success: function (data) {
+
+                        $.notify({
+                            // options
+                            message: '<span style="font-size:15px;">' + action + ' room <strong style="color:green;">' + data.name + ' </strong> success</span>'
+                        }, {
+                            // settings
+                            type: 'info'
+                        });
+                    }, error: function (xhr, ajaxOptions, thrownError) {
+                        $("#submit").prop('disabled', false);
+                        $.notify({
+                            // options
+                            message: '<span> Erorr </span><br><span style="font-size:15px;">' + xhr.responseText + ' </span>'
+                        }, {
+                            // settings
+                            type: 'error'
+                        });
+
+
+                    }
+                });
+
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+            });
+{#            {% if room %}#}
+{#                var dataset = [#}
+{#                    {% for note_in in note_in_list %}#}
+{#                        {#}
+{#                            'date': new Date("{{ note_in.inside.created_at|date:"Y-m-d H:i:s" }}"),#}
+{#                            'count':{{ note_in.count }},#}
+{#                            'supplier': "{{ note_in.inside.supplier.name }}",#}
+{#                            'inside_id': "{{ note_in.inside.id }}",#}
+{#                            'supplier_id': "{{ note_in.inside.supplier.id }}"#}
+{##}
+{#                        },#}
+{#                    {% endfor %}#}
+{#                ]#}
+{##}
+{#                let goods_in = $('#goods-in').DataTable({#}
+{#                    data: dataset,#}
+{#                    "order": [[0, 'desc']],#}
+{#                    "columns": [#}
+{#                        {#}
+{#                            "data": "date", render: function (d) {#}
+{#                                return '<small class="label bg-blue" style="font-size: 13px">' + moment(d).format("DD/MM/YYYY") + '</small> ' + moment(d).format("HH:mm:SS")#}
+{#                            }#}
+{#                        },#}
+{#                        {#}
+{#                            "data": "count", render: function (data, type, row) {#}
+{#                                return '<i class="fa fa-arrow-up text-green" style="font-size: 13px" ></i> ' + '<small class="label bg-green" style="font-size: 13px">' + data + '</small>'#}
+{#                            }#}
+{#                        },#}
+{##}
+{##}
+{#                        {#}
+{#                            "data": "supplier", render: function (data, type, row) {#}
+{#                                return '<a href="/suppliers/' + row['supplier_id'] + '/">' + data + '</a>'#}
+{#                            }#}
+{#                        },#}
+{#                        {#}
+{#                            "data": "inside_id", render: function (data, type, row) {#}
+{#                                return '<a class="btn btn-info" href="/delivery-note/' + data + '/">View Detail</a>'#}
+{#                            }#}
+{#                        },#}
+{#                        {#}
+{#                            "data": "supplier_id", render: function (data, type, row) {#}
+{#                                return ""#}
+{#                            }#}
+{#                        },#}
+{##}
+{##}
+{#                    ],#}
+{#                    "paging": true,#}
+{#                    "lengthChange": false,#}
+{#                    "ordering": true,#}
+{#                    "info": true,#}
+{#                    "autoWidth": false,#}
+{#                    "dom": "lrtip",#}
+{#                    "pageLength": 10,#}
+{#                    "search": {#}
+{#                        "regex": true#}
+{#                    }#}
+{#                });#}
+{##}
+{#                 var dataset_out = [#}
+{#                    {% for note_out in note_out_list %}#}
+{#                        {#}
+{#                            'date': new Date("{{ note_out.inside.created_at|date:"Y-m-d H:i:s" }}"),#}
+{#                            'count':{{ note_out.count }},#}
+{#                            'customer': "{{ note_out.inside.customer.name }}",#}
+{#                            'inside_id': "{{ note_out.inside.id }}",#}
+{#                            'customer_id': "{{ note_out.inside.customer.id }}"#}
+{##}
+{#                        },#}
+{#                    {% endfor %}#}
+{#                ]#}
+{##}
+{#                let goods_out = $('#goods-out').DataTable({#}
+{#                    data: dataset_out,#}
+{#                    "order": [[0, 'desc']],#}
+{#                    "columns": [#}
+{#                        {#}
+{#                            "data": "date", render: function (d) {#}
+{#                                return '<small class="label bg-blue" style="font-size: 13px">' + moment(d).format("DD/MM/YYYY") + '</small> ' + moment(d).format("HH:mm:SS")#}
+{#                            }#}
+{#                        },#}
+{#                        {#}
+{#                            "data": "count", render: function (data, type, row) {#}
+{#                                return '<i class="fa fa-arrow-down text-red" style="font-size: 13px" ></i> ' + '<small class="label bg-red" style="font-size: 13px">' + data + '</small>'#}
+{#                            }#}
+{#                        },#}
+{##}
+{##}
+{#                        {#}
+{#                            "data": "customer", render: function (data, type, row) {#}
+{#                                return '<a href="/suppliers/' + row['customer_id'] + '/">' + data + '</a>'#}
+{#                            }#}
+{#                        },#}
+{#                        {#}
+{#                            "data": "inside_id", render: function (data, type, row) {#}
+{#                                return '<a class="btn btn-info" href="/receipt-note/' + data + '/">View Detail</a>'#}
+{#                            }#}
+{#                        },#}
+{#                        {#}
+{#                            "data": "customer_id", render: function (data, type, row) {#}
+{#                                return ""#}
+{#                            }#}
+{#                        },#}
+{##}
+{##}
+{#                    ],#}
+{#                    "paging": true,#}
+{#                    "lengthChange": false,#}
+{#                    "ordering": true,#}
+{#                    "info": true,#}
+{#                    "autoWidth": false,#}
+{#                    "dom": "lrtip",#}
+{#                    "pageLength": 10,#}
+{#                    "search": {#}
+{#                        "regex": true#}
+{#                    }#}
+{#                });#}
+{#            {% endif %}#}
+        })
+    </script>
+{% endblock %}

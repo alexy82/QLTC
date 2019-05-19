@@ -1,0 +1,166 @@
+{% extends 'layout/main.html' %}
+{% load static %}
+
+{% block header %}
+
+{% endblock %}
+{% block section %}
+    <a href="{% url 'QuanLyTiecCuoi:orders' %}">Danh Sách Đơn Hàng</a> <i class="fa fa-fw  fa-angle-right"></i>
+    {{ action }}
+{% endblock %}
+{% block content %}
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box box-primary">
+                    <div class="box-header">
+                        <h2 class="box-title">{{ action }} Order</h2>
+                        <br>
+                        <hr>
+                    </div>
+
+                    <div class="box-body">
+                        <form class="form-horizontal" method="POST" action="{{ url }}">
+                            {% csrf_token %}
+                            <input type="hidden" name="created_by" value="1">
+                            <div class="form-group">
+                                <label for="inputUser3" class="col-md-2 control-label">
+                                    <a type="button" class="btn btn-box-tool" title="Thêm khách hàng"
+                                       href="{% url 'QuanLyTiecCuoi:customers-add' %}">
+                                        <i class="fa fa-plus text-success" style="font-size: 15px"></i>
+                                    </a>Khách hàng </label>
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-list"></i></span>
+
+                                        <select name="customer" class="form-control type-select">
+                                            {% for customer in customers %}
+                                                <option value="{{ customer.id }}">{{ customer.name }}</option>
+                                            {% endfor %}
+                                        </select>
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="inputUser3" class="col-md-2 control-label">Phòng</label>
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+
+                                        <select name="room" class="form-control type-select">
+                                            {% for room in rooms %}
+                                                <option value="{{ room.id }}">{{ room.name }} - Price:{{ room.price }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputUser3" class="col-md-2 control-label">Bắt đầu</label>
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-pencil"></i></span>
+
+                                        <input name="date" type="date" class="form-control"
+                                               placeholder="Name" required value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputUser3" class="col-md-2 control-label">Buổi</label>
+                                <div class="col-md-10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="fa fa-user"></i></span>
+
+                                        <select name="at" class="form-control type-select">
+                                            <option value="1" selected>Sáng</option>
+                                            <option value="2" selected>Chiều</option>
+                                            <option value="3" selected>Tối</option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="col-md-12">
+
+                                <button type="submit" style="float: right; margin-left: 10px;"
+                                        class="btn btn-primary">
+                                    {{ btn_content }}
+                                </button>
+                            </div>
+
+
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block script %}
+    <script src="{% static "bower_components/datatables.net/js/jquery.dataTables.min.js" %}"></script>
+    <script src="{% static "bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js" %}"></script>
+    <script>
+        {% if room %}
+            var type = {{ room.room_type_id }}
+            var method = "PUT"
+            var action = "Update"
+            $(".type-select").val(type)
+        {% else %}
+            var method = "POST"
+            var action = "Create"
+        {% endif %}
+
+        $(function () {
+            $("form").submit(function (e) {
+
+
+                var form = $(this);
+                var url = form.attr('action');
+                console.log(form.serialize())
+                $.ajax({
+                    type: method,
+                    url: url,
+                    data: form.serialize(), // serializes the form's elements.
+                    headers: {
+                        "X-CSRFToken": "{{csrf_token}}"
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        $.notify({
+                            // options
+                            message: '<span style="font-size:15px;">' + action + ' order <strong style="color:green;">' + data.id + ' </strong> success</span>'
+                        }, {
+                            // settings
+                            type: 'info'
+                        });
+                    }, error: function (xhr, ajaxOptions, thrownError) {
+                        $("#submit").prop('disabled', false);
+                        $.notify({
+                            // options
+                            message: '<span> Erorr </span><br><span style="font-size:15px;">' + xhr.responseText + ' </span>'
+                        }, {
+                            // settings
+                            type: 'error'
+                        });
+
+
+                    }
+                });
+
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+            });
+
+        })
+    </script>
+{% endblock %}
